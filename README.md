@@ -65,7 +65,7 @@ client (e.g., Gmail via browser or Thunderbird).
 **Analyze dns Queries:**
 
 - Filter: dns
-- 
+  
 ![image](https://github.com/user-attachments/assets/98dd7c75-346b-4bc9-a07a-1213d3e2c8db)
 
 ### Email Header Analysis
