@@ -1,6 +1,8 @@
 # Using-Wireshark---analyzing-web-browser-artifacts-email-header-analysis
 ## AIM:
 To use Wireshark to analyze web browser activities and inspect email headers from captured network traffic.
+
+
 ## Architecture Diagram:
 ```mermaid
 flowchart TD
@@ -15,48 +17,75 @@ flowchart TD
     G --> I[Findings and Reports]
     H --> I
 ```
+
 ## DESIGN STEPS:
 ### Step 1:
-- Install Wireshark and ensure correct network adapter selection.
-- Enable packet capturing for your active interface (Wi-Fi/Ethernet).
+Launch Wireshark and start capturing traffic on the appropriate network interface.
 
 ### Step 2:
-**Web Browser Artifact Analysis**
-- Open a browser and visit websites with login forms (use dummy credentials).
-- In Wireshark, filter traffic with:
-    - ```http``` for normal HTTP requests
-    - ```http.cookie``` for cookies
-    - ```http.authbasic``` for basic authentication
-- Identify:
-    - URLs visited
-    - GET/POST requests
-    - Cookies & session IDs
-    - Credentials (if plaintext HTTP is used)
+Use filters like http, dns, or tcp.port == 80 to monitor web browser artifacts such as visited URLs, cookies, and user-agent strings.
+
 ### Step 3:
-- Capture email traffic by sending/receiving emails (dummy mail server or provided PCAP).
-- Use filters:
-    - ```smtp``` (Simple Mail Transfer Protocol)
-    - ```pop``` / ```imap``` (for received mail)
-- Inspect email headers:
-    - Source IP
-    - Mail server hostname
-    - Timestamps
-    - Possible forged headers
+Apply filters like smtp, pop, or imap to locate and analyze email header details (e.g., sender, receiver, subject) from email communications.
+
 ## PROGRAM:
-```mermaid
-flowchart TD
-    A[Start Wireshark Capture] --> B[Generate Traffic: Web Browsing & Emails]
-    B --> C[Apply Protocol Filters: HTTP/SMTP/IMAP/POP]
-    C --> D[Extract Browser Artifacts: URLs, Cookies, Credentials]
-    C --> E[Analyze Email Headers: Source, Server, Metadata]
-    D --> F[Save Findings]
-    E --> F[Save Findings]
-    F --> G[Generate Digital Forensic Report]
-```
+Wireshark Web and Email Traffic Filtering Steps
 
 ## OUTPUT:
-Captured Web Activity and Email Header Information
+## **A. Capturing Traffic in Wireshark**
+
+1. Open Wireshark and start capturing on the active interface (Wi-
+Fi/Ethernet).
+
+2. Perform activities like opening a website or sending an email through a
+client (e.g., Gmail via browser or Thunderbird).
+3. Stop the capture once done.
+
+![image](https://github.com/user-attachments/assets/359df636-5546-490e-af50-8754ae460433)
+
+
+### **Analyzing Web Browser Artifacts**
+**Analyze Queries:**
+
+- Filter: http
+  ![image](https://github.com/user-attachments/assets/ca5513bb-cf33-4a94-ba74-68a3f46c8ab9)
+
+- Filter: tcp
+![image](https://github.com/user-attachments/assets/40925c40-1b3a-4a90-8cc1-325ad2db735d)
+
+
+**Inspect HTTP GET/POST requests**
+
+![image](https://github.com/user-attachments/assets/39fe12c9-53d1-4ad5-8d9c-5d84b516acf9)
+
+**Follow TCP Stream to reconstruct page request flow:  Right-click a packet → Follow → TCP Stream.**
+
+![image](https://github.com/user-attachments/assets/a2dcd3cb-b9eb-4fe6-a8db-75a0cd0a449f)
+
+**Analyze dns Queries:**
+
+- Filter: dns
+- 
+![image](https://github.com/user-attachments/assets/98dd7c75-346b-4bc9-a07a-1213d3e2c8db)
+
+### Email Header Analysis
+- **Apply relevant filters**
+  ```
+   For SMTP: tcp.port == 25 or 587
+  ```
+  
+   ![image](https://github.com/user-attachments/assets/625d9c10-4174-49ed-aafd-52ee30395e2d)
+       
+- **Locate email data**
+  
+    Look for SMTP packets to see sender/receiver email addresses.
+    Use "Follow TCP Stream" to view the full email headers and body if unencrypted.
+  
+- **Extract Email Header Fields**
+   Analyze From, To, Subject, Date, Message-ID, and relay servers used in sending the email.
+  
+  ![image](https://github.com/user-attachments/assets/0ca76b9a-46d4-4ea7-879c-4723ed84982b)
+     
 
 ## RESULT:
-Web browser artifacts and email headers were successfully analyzed using Wireshark.
-
+Web browser artifacts and email headers were successfully analyzed using Wireshark
